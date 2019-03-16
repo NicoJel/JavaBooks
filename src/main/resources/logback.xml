@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    
+	<property name="LOGS_DIR" value="C:/logs"/>
+	
+	<appender name="jsonAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS_DIR}/gfitWebJson.log</file>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %p %X{ipCaller}:%X{portCaller} %X{sessionId} %X{user} %c{1}:%L %X{uri} %X{responseTime} ms %msg%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<maxIndex>5</maxIndex>
+			<fileNamePattern>${LOGS_DIR}/gfitWebJson.%d{yyyy-MM-dd}.log.%i</fileNamePattern>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>1MB</maxFileSize>
+		</triggeringPolicy>
+	</appender>
+	
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] %5p %c{1}:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="gfitAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS_DIR}/gfitWeb.log</file>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %5p %c{1}:%L - %msg%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<maxIndex>5</maxIndex>
+			<fileNamePattern>${LOGS_DIR}/gfitWeb.%d{yyyy-MM-dd}.log.%i</fileNamePattern>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>100KB</maxFileSize>
+		</triggeringPolicy>
+	</appender>
+	
+	<logger name="org.springframework.web" level="INFO"/>
+
+    <logger name="org.hibernate.SQL" additivity="false" level="DEBUG">
+		<appender-ref ref="consoleAppender" />
+    </logger>
+	
+	<logger name="jsonLogger" additivity="false" level="INFO">
+		<appender-ref ref="jsonAppender" />
+	</logger>
+	
+	<logger name="gfitWebLogger" additivity="false" level="INFO">
+		<appender-ref ref="consoleAppender" />
+		<appender-ref ref="gfitAppender" />
+	</logger>
+	
+	<root level="INFO">
+		<appender-ref ref="consoleAppender" />
+		<appender-ref ref="jsonAppender" />
+		<appender-ref ref="gfitAppender" />
+	</root>
+</configuration>
